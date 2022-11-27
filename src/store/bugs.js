@@ -1,47 +1,35 @@
-// Action types
+import { createSlice } from "@reduxjs/toolkit";
 
-const BUG_ADDED = "bugAdded";
-const BUG_REMOVED = "bugRemoved";
-const BUG_RESOLVED = "bugResolved";
-
-// ActionCreators
-
-export const bugAdded = (description) => ({
-  type: BUG_ADDED,
-  payload: {
-    description,
-  },
-});
-
-export const bugResolved = (id) => ({
-  type: BUG_RESOLVED,
-  payload: {
-    id,
-  },
-});
-
-// reducers
+/* The actions performed using redux/toolkit have immutable objects only.
+It uses immer under the hood itself. Also with createSlice we would not need
+createAction & createReducer separately. */
 
 let lastId = 0;
 
-export default function reducer(state = [], action) {
-  switch (action.type) {
-    case actions.BUG_ADDED:
-      return [
-        ...state,
-        {
-          id: ++lastId,
-          description: action.payload.description,
-          resolved: false,
-        },
-      ];
-    case actions.BUG_REMOVED:
-      return state.filter((bug) => bug.id !== action.payload.id);
-    case actions.BUG_RESOLVED:
-      return state.map((bug) =>
-        bug.id !== action.payload.id ? bug : { ...bug, resolved: true }
-      );
-    default:
-      return state;
-  }
-}
+const slice = createSlice({
+  name: "bugs",
+  initialState: [],
+  reducers: {
+    // actions => action handlers
+
+    bugAdded: (bugs, action) => {
+      bugs.push({
+        id: ++lastId,
+        description: action.payload.description,
+        resolved: false,
+      });
+    },
+
+    bugRemoved: (bugs, action) => {
+      bugs = bugs.filter((bug) => bug.id !== action.payload.id);
+    },
+
+    bugResolved: (bugs, action) => {
+      const index = bugs.findIndex((bug) => bug.id === action.payload.id);
+      bugs[index].resolved = true;
+    },
+  },
+});
+
+export const { bugAdded, bugRemoved, bugResolved } = slice.actions;
+export default slice.reducer;
