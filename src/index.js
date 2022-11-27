@@ -1,19 +1,14 @@
-import { bugAdded, bugResolved } from "./actions";
+import { bugAdded, bugResolved } from "./store/bugs";
+import configureStore from "./store/configureStore";
 import { produce } from "immer";
-import store from "./store";
 
-const unsubscribe = store.subscribe(() => {
+const store = configureStore();
+
+store.subscribe(() => {
   console.log("Store changed!", store.getState());
 });
 
 store.dispatch(bugAdded("Bug 1"));
+store.dispatch(bugAdded("Bug 2"));
+store.dispatch(bugAdded("Bug 3"));
 store.dispatch(bugResolved(1));
-
-unsubscribe();
-
-store.dispatch({
-  type: actions.BUG_REMOVED,
-  payload: {
-    id: 1,
-  },
-});
