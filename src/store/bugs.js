@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { createSelector } from "reselect";
 
 /* The actions performed using redux/toolkit have immutable objects only.
 It uses immer under the hood itself. Also with createSlice we would not need
@@ -11,6 +12,12 @@ const slice = createSlice({
   initialState: [],
   reducers: {
     // actions => action handlers
+
+    bugAssignedToUser: (bugs, action) => {
+      const { bugId, userId } = action.payload;
+      const index = bugs.findIndex((bug) => bug.id === bugId);
+      bugs[index].userId = userId;
+    },
 
     bugAdded: (bugs, action) => {
       bugs.push({
@@ -31,10 +38,20 @@ const slice = createSlice({
   },
 });
 
-export const { bugAdded, bugRemoved, bugResolved } = slice.actions;
+export const { bugAdded, bugRemoved, bugResolved, bugAssignedToUser } =
+  slice.actions;
 export default slice.reducer;
 
 // selector
+// Memoization : It is a technique to optimize expensive functions like filtering array
 
-export const getUnresolvedBugs = (state) =>
-  state.entities.bugs.filter((bug) => !bug.resolved);
+export const getUnresolvedBugs = createSelector(
+  (state) => state.entities.bugs,
+  (bugs) => bugs.filter((bug) => !bug.resolved)
+);
+
+export const getBugsByUser = (userId) =>
+  createSelector(
+    (state) => state.entities.bugs,
+    (bugs) => bugs.filter((bug) => bug.userId === userId)
+  );
