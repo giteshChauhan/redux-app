@@ -16,9 +16,9 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.2.5",
-    "immer": "^9.0.16",
     "lodash": "^4.17.21",
     "redux": "4.0",
-    "redux-devtools-extension": "^2.13.9"
+    "redux-devtools-extension": "^2.13.9",
+    "reselect": "^4.1.7"
   }
 }
