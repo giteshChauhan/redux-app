@@ -6,8 +6,10 @@ const api =
   (next) =>
   async (action) => {
     if (action.type !== actions.apiCallBegan.type) return next(action);
+    const { url, method, data, onSuccess, onError, onStart } = action.payload;
+
+    if (onStart) dispatch({ type: onStart });
     next(action);
-    const { url, method, data, onSuccess, onError } = action.payload;
 
     try {
       const response = await axios.request({
@@ -16,11 +18,10 @@ const api =
         method,
         data,
       });
-      console.log(response);
       dispatch(actions.apiCallSuccess(response.data));
       if (onSuccess) dispatch({ type: onSuccess, payload: response.data });
     } catch (error) {
-      dispatch(actions.apiCallFailed(error));
+      dispatch(actions.apiCallFailed(error.message));
       if (onError) dispatch({ type: onError, payload: error });
     }
   };
