@@ -1,3 +1,9 @@
 # About:
 
-Learning redux functionality with react library.
+Learning redux functionality including:
+
+- redux-toolkit.
+- redux-devtools.
+- apiCalls.
+- middlewares.
+- unit testing.
