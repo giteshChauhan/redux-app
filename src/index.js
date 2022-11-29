@@ -1,21 +1,28 @@
-// This is my UI Layer
-
 import {
   bugAdded,
   bugResolved,
   bugAssignedToUser,
   getUnresolvedBugs,
   getBugsByUser,
+  loadBugs,
+  addBug,
+  resolveBug,
+  assignBugToUser,
 } from "./store/bugs";
 import { projectAdded, projectRemoved } from "./store/projects";
 import configureStore from "./store/configureStore";
 import { userAdded } from "./store/users";
-import { loadBugs } from "./store/bugs";
 
 const store = configureStore();
 
+// This is my UI Layer
+
 store.dispatch(userAdded({ name: "Gitesh" }));
+
+//store.dispatch(addBug({ description: "a" }));
 store.dispatch(loadBugs());
+//setTimeout(() => store.dispatch(resolveBug(1)), 2000);
+setTimeout(() => store.dispatch(assignBugToUser(1, 4)), 2000);
 
 // store.dispatch(bugAdded({ description: "Bug 1" }));
 // store.dispatch(bugAdded({ description: "Bug 2" }));
